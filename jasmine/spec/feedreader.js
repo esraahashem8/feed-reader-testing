@@ -72,27 +72,25 @@ $(function() {
          * hiding/showing of the menu element.
          */
 
-        describe('Menu', function() {
-            it('Hidden menu', function () {
-                expect($('.menu-hidden').is(':visible')).toBe(true);
-            });
+    describe('The menu', function() {
+        it('is hidden by default', function() {
+            expect($('body').hasClass('menu-hidden')).toBe(true);
+        });
 		
-		/* TODO: Write a test that ensures the menu changes
+		    /* TODO: Write a test that ensures the menu changes
              * visibility when the menu icon is clicked. This test
              * should have two expectations: does the menu display when
              * clicked and does it hide when clicked again.
              */
 			 
-            it('Menu icon is visible when clicked', function () {
-                $('a.menu-icon-link').trigger('click');
-                expect($('.menu-hidden').is(':visible')).toBe(false);
-            });
-
-            it('Menu icon is hidden when clicking again ', function () {
-                $('a.menu-icon-link').trigger('click');
-                expect($('.menu-hidden').is(':visible')).toBe(true);
-            });
+        it('changes visibility when is clicked', function() {
+            let menuIcon = $('.menu-icon-link');
+            menuIcon.click();
+            expect($('body').hasClass('menu-hidden')).toBe(false);
+            menuIcon.click();
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
+    });
 
     /* TODO: Write a new test suite named "Initial Entries" */
 
@@ -119,13 +117,21 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-        describe('New Feed Selection', function(){
-            var testfeed;
+         describe('New Feed Selection', function(){
+			let oldFeed, newFeed;
             beforeEach(function(done) {
                 loadFeed(0, function() {
-                    testfeed = $('.feed').html();
-                    loadFeed(1, done);
+                    oldFeed = $('.feed').html();
+				loadFeed(1, function() {
+                    newFeed = $('.feed').html();
+					//start tests
+					done();
                 });
+            });
+		});
+            // Check the newsfeed  html to be not same as previous.
+            it('has a different content than previous one', function(){
+                expect(oldFeed).not.toBe(newFeed);
             });
         });
 }());
